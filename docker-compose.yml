@@ -28,9 +28,6 @@ services:
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline:/usr/share/logstash/pipeline
-    ports:
-      - "127.0.0.1:5000:5000"
-      - "127.0.0.1:5000:5000/udp"
     depends_on:
       - elasticsearch
     restart: always
