@@ -14,6 +14,7 @@ services:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    restart: always
     networks:
       - elk
 
@@ -32,6 +33,7 @@ services:
       - "127.0.0.1:5000:5000/udp"
     depends_on:
       - elasticsearch
+    restart: always
     networks:
       - elk
 
@@ -45,6 +47,7 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    restart: always
     networks:
       - elk
 
@@ -57,5 +60,6 @@ services:
         ROUTE_URIS: "logstash://elk-logstash.elk_elk:5000"
     depends_on:
         - logstash
+    restart: always
     networks:
       - elk
