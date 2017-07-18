@@ -10,6 +10,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     environment:
+      LOGSPOUT: ignore
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
@@ -36,6 +37,8 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.0
+    environment:
+      LOGSPOUT: ignore
     volumes:
       - ./kibana/config/:/usr/share/kibana/config
     ports:
