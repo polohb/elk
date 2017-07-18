@@ -6,6 +6,28 @@ server.name: kibana
 server.host: "0.0.0.0"
 elasticsearch.url: http://elasticsearch:9200
 
+# For use behind an nginx reverse proxy change base url if needed
+#server.basePath: "/analysis"
+
+# ------
+# nginx example conf
+#  # KIBANA (elk) stuff
+#  location /analysis/ {
+#     proxy_pass http://127.0.0.1:5601/;
+#     proxy_http_version 1.1;
+#     proxy_set_header Upgrade $http_upgrade;
+#     proxy_set_header Connection 'upgrade';
+#     proxy_set_header Host $host;
+#     proxy_cache_bypass $http_upgrade;
+#   }
+#   # optional block to handle landing url without trailing slash: `/analytics`
+#   location = /analysis {
+#     return 302 /analysis/;
+#   }
+# ------
+
+
+
 ## Disable X-Pack
 ## see https://www.elastic.co/guide/en/x-pack/current/xpack-settings.html
 ##     https://www.elastic.co/guide/en/x-pack/current/installing-xpack.html#xpack-enabling
