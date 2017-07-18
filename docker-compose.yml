@@ -1,0 +1,58 @@
+version: '2'
+
+networks:
+  elk:
+    driver: bridge
+
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - elk
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.5.0
+    container_name: elk-logstash
+    environment:
+      TZ: Europe/Paris
+      LOGSPOUT: ignore
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "127.0.0.1:5000:5000"
+      - "127.0.0.1:5000:5000/udp"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.5.0
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  logspout:
+    build:
+        context: ./logspout
+    volumes:
+        - /var/run/docker.sock:/tmp/docker.sock
+    environment:
+        ROUTE_URIS: "logstash://elk-logstash.elk_elk:5000"
+    depends_on:
+        - logstash
+    networks:
+      - elk
